@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earthquake Emilia Mashup</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Francesco Bartoli, Geobeyond - http://www.geobeyond.it" />
+    <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="script/leaflet/leaflet.ie.css" /><![endif]-->
+<!-- add jquery and jqueryui from CDN hosting-->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css" type="text/css">
+<!-- add custom style for the page itself-->
+    <link rel="stylesheet" href="stylesheet/emilia.css" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    <!-- External GeoJSON file cleaned from ISIDE database CSV with points of earthquakes happened up to the date -->
+    <script src="https://idisk.mac.com/francesco.bartoli//Public/events30052012.geojson"></script>
+</head>
+<body>
+    <div id="map" style="height:600px"></div>
+    <div class="geolocation">
+        <a href="#" onclick="geoLocate(); return false;" title="Try Location"></a>
+    </div>
+    <form class='location'>
+        <input type='text' class='search' placeholder='Search Location'>
+    </form>
+    <div id="legend"></div>
+<!-- add a slider in the page -->
+    <div id="slider"><div class="ui-slider-handle"></div></div>
+    <script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+    <script>
+        var map = new L.Map('map');
+        var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/2c9aaf990ed9461691b72500453a9c4b/{styleId}/256/{z}/{x}/{y}.png',
+            cloudmadeAttribution = 'Map data &copy; 2012 OpenStreetMap contributors, Imagery &copy; 2012 CloudMade',
+            cloudmadeOptions = {
+                maxZoom: 18,
+                attribution: cloudmadeAttribution
+            }
+            cm_base = new L.TileLayer(cloudmadeUrl, cloudmadeOptions, {styleId: 997}),
+            cm_minimal = new L.TileLayer(cloudmadeUrl, cloudmadeOptions, {styleId: 22677}),
+            cm_midnightCommander = new L.TileLayer(cloudmadeUrl, cloudmadeOptions, {styleId: 999});
+
+        //        var sism_pcn = new L.TileLayer.WMS("http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?", {
+//        var sism_pcn = new L.TileLayer.WMS("http://wms.pcn.minambiente.it/ogc", {
+// Use a WMS cascading server for the PCN service as the origin doesn't deliver the image type over HTTP properly 
+        var sism_pcn = new L.TileLayer.WMS("http://ogsuite.geobeyond.it/geoserver/pcn_proxy/wms?", {
+            layers: 'pcn_proxy:RN.ZONERISCHIO.CLASSIFICAZIONESISMICA',
+            format: 'image/png',
+            transparent: true,
+            attribution: "SISMICITA' © PCN Min Ambiente",
+            opacity: .5
+        });
+// Create a layer where to load the earthquake points
+        var eqLayer = new L.GeoJSON();
+// Set a default style as the points will appear
+        var eqCircleStyle = {
+            radius: 4,
+                color: "#2262CC",
+                weight: 2,
+                opacity: 0.6,
+                fillOpacity: 0.3,
+                fillColor: "#2262CC"
+        };
+
+// Define what happens during interaction and setting style of points into the map
+        
+        eqLayer.on("featureparse", function (e){
+// you can style features depending on their properties, etc.
+            var popupText = 'Magnitudo: ' + e.properties.Magnitudo + '<br \>';
+            if (e.layer instanceof L.Point) {
+                e.layer.setStyle({color: 'gray', weight: 1, fillColor: colorClasses[e.properties.Magnitudo]});
+            }
+            e.layer.bindPopup(popupText);
+        });
+        eqLayer.addGeoJSON(earthquakes, {
+            pointToLayer: function (latlng){
+                return new L.CircleMarker(latlng, eqCircleStyle);
+            }
+        });
+//
+//
+// GetLegendGraphic request for PCN http://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/Vettoriali/Classificazione_sismica_2010.map&version=1.3.0&layer=RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&request=GetLegendGraphic&format=image/png&sld_version=1.1.0
+// GetFeatureInfo request for OGS http://ogsuite.geobeyond.it/geoserver/pcn_proxy/wms?version=1.1.1&layers=pcn_proxy:RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&Request=GetFeatureInfo&CRS=EPSG:4326&QUERY_LAYERS=pcn_proxy:RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&INFO_FORMAT=text/html&BBOX=5.20458426232741,34.09439998357114,21.52548564982483,49.43099375128766&WIDTH=1000&HEIGHT=1000&X=745&Y=355
+// GetFeatureInfo request for PCN http://wms.pcn.minambiente.it/ogc%3Fmap=/ms_ogc/WMS_v1.3/Vettoriali/Classificazione_sismica_2010.map&version=1.3.0&layers=RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&Request=GetFeatureInfo&CRS=EPSG:4326&QUERY_LAYERS=RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&INFO_FORMAT=text/html&BBOX=5.20458426232741,34.09439998357114,21.52548564982483,49.43099375128766&WIDTH=1000&HEIGHT=1000&X=745&Y=355
+// Add controls for base map layers
+        var baseMaps = {
+            "Base": cm_base,
+            "Minimal": cm_minimal,
+            "Night View": cm_midnightCommander
+        };
+        var eqOverlays = {
+            "WMS PCN Sismicità": sism_pcn,
+            "Shakes": eqLayer
+        };
+        var layersControl = new L.Control.Layers(baseMaps, eqOverlays, {
+            collapsed: !L.Browser.touch
+        });
+
+        map.setView(new L.LatLng(44.8909,11.272), 7).addLayer(cm_base).addLayer(sism_pcn).addLayer(eqLayer);
+        map.addControl(layersControl);
+        $("#slider").slider({
+            value: 50,
+            slide: function(e, ui) {
+                sism_pcn.setOpacity(ui.value / 100);
+            }
+        });
+//
+//
+// Add code for geocoding
+        $(function() {
+            // Zoom into location
+            function geocode(query) {
+                $.ajax({
+                    url: 'http://open.mapquestapi.com/nominatim/v1/search?format=json&json_callback=callback&limit=1&q=' + query,
+                    dataType: 'jsonp',
+                    jsonpCallback: 'callback',
+                    success: function (value) {
+                        value = value[0];
+                        if (value === undefined) {
+                            alert('<p>The search you tried did not return a result.</p>');
+                        } else {
+                                var point = new L.LatLng(value.lat, value.lon);
+                                map.setView(point, 10);
+                        }
+                    }
+                });
+            }
+
+            var input = $('input.search');
+
+        console.log(input);
+
+            $('form.location').submit(function (e){
+                e.preventDefault();
+                var inputValue = input.val(),
+                encodedInput = encodeURIComponent(inputValue);
+                geocode(encodedInput);
+            });
+        });
+// Add function for geolocalisation
+        function geoLocate() {
+            map.locate({setView: true, maxZoom: 11});
+        }
+// Add a legend for WMS
+        var legend = document.getElementById('legend'),
+			legendHTML = [];
+		
+//		legendHTML.push('<div><img href="http://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/Vettoriali/Classificazione_sismica_2010.map&version=1.3.0&layer=RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&request=GetLegendGraphic&format=image/png&sld_version=1.1.0"></img></div>');
+        legendHTML.push('<div id=​"legend">​<img src="http://wms.pcn.minambiente.it/ogc?map=/ms_ogc/WMS_v1.3/Vettoriali/Classificazione_sismica_2010.map&version=1.3.0&layer=RN.ZONERISCHIO.CLASSIFICAZIONESISMICA&request=GetLegendGraphic&format=image/png&sld_version=1.1.0"></div>');
+		legend.innerHTML = legendHTML.join('');
+
+    </script>
+</body>
+</html>
