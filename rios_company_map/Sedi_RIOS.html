@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sedi Rete Italiana Open Source</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Francesco Bartoli, Geobeyond - http://www.geobeyond.it" />
+    <link type="text/css" rel="stylesheet" href="lib/leaflet/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="lib/leaflet/leaflet.ie.css" /><![endif]-->
+    <link type="text/css" rel="stylesheet" href="lib/leaflet/plugins/leaflet.markercluster/MarkerCluster.css" />
+    <link type="text/css" rel="stylesheet" href="lib/leaflet/plugins/leaflet.markercluster/MarkerCluster.Default.css" />
+<!-- add jquery and jqueryui from CDN hosting-->
+    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css" />
+<!-- add custom style for the page itself-->
+<!--    <link type="text/css" rel="stylesheet" href="lib/stylesheet/rios.css" /> -->
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Norican">
+    <link type="text/css" rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="lib/bootstrap/css/bootstrap-responsive.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="lib/leaflet/plugins/leaflet.markercluster/leaflet.markercluster.js"></script>
+    <style type="text/css">
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow:hidden;
+      }
+
+      #map {
+        width:600px;
+        height:600px;
+        padding: 10;
+      }
+
+      .leaflet-control-geoloc {
+        background-image: url(data/img/location.png);
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+      }
+    </style>
+    <!-- External GeoJSON file geocoded from CSV with QGIS -->
+    <script src="data/sedi_RIOS_geocoded.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        
+        $.ajaxSetup({ cache: false });
+
+        var isMobile = {
+            Android: function() {
+                return navigator.userAgent.match(/Android/i);
+            },
+            BlackBerry: function() {
+                return navigator.userAgent.match(/BlackBerry/i);
+            },
+            iOS: function() {
+                return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+            },
+            Opera: function() {
+                return navigator.userAgent.match(/Opera Mini/i);
+            },
+            Windows: function() {
+                return navigator.userAgent.match(/IEMobile/i);
+            },
+            any: function() {
+                return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+            }
+        };
+
+        function markLocation() {
+            $('#newmarkerModal').modal('show');
+            $('#lat').val(map.getCenter().lat);
+            $('#lng').val(map.getCenter().lng);
+        }
+
+        // create a map
+        map = new L.Map('map');
+
+        // create the OpenStreetMap mapquest layer
+
+        mapquestOSM = new L.TileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            subdomains: ["otile1", "otile2", "otile3", "otile4"],
+            attribution: 'Basemap tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
+        });
+
+        mapquestOAM = new L.TileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg", {
+            maxZoom: 18,
+            subdomains: ["oatile1", "oatile2", "oatile3", "oatile4"],
+            attribution: 'Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
+        });
+
+        map.addLayer(mapquestOSM);
+
+
+        // set the map's starting view
+        map.setView( new L.LatLng(43.110762, 12.389164), 6);
+
+
+        var riosMC = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            maxClusterRadius: 50
+        });
+
+        var riosIcon = L.icon({
+                    iconUrl: 'data/img/pp_rios.png',
+                    iconSize: [32, 37],
+                    iconAnchor: [16, 37],
+                    popupAnchor: [0, -28]
+                });
+
+        function onEachFeature(feature, layer) {
+                var popupContent = '<table class="table table-striped table-bordered table-condensed table-hover">'+
+                                                '<tr>'+
+                                                    '<th>Azienda: </th>'+
+                                                    '<td>' + feature.properties.Azienda + '</td>'+
+                                                '</tr>'+
+                                                    '<th>Indirizzo: </th>'+
+                                                    '<td>' + feature.properties.Indirizzo_Sede + '</td>'+
+                                                '</tr>'+
+                                                '</tr>'+
+                                                    '<th>Web: </th>'+
+                                                    '<td><a href="' + feature.properties.Sito_Web + '" target="_blank">' + feature.properties.Sito_Web + '</a></td>'+
+                                                '</tr>'+
+                                            '</table>';
+
+                if (feature.properties && feature.properties.popupContent) {
+                    popupContent += feature.properties.popupContent;
+                }
+
+                layer.bindPopup(popupContent);
+
+            }
+
+        function onLocationFound(e) {
+            
+            if (e.accuracy <= 20) {
+                map.stopLocate();
+            };
+            var killGPS = setInterval(function () {
+                map.stopLocate();
+                clearInterval(killGPS);
+            }, 10000);
+
+        }
+
+        function onLocationError(e) {
+            alert(e.message);
+        }
+
+
+        // GeoLocation Control
+        function geoLocate() {
+            map.stopLocate();
+            map.locate({setView: true, maxZoom: 17, maximumAge: 3000, enableHighAccuracy: true, watch: true});
+        }
+        var geolocCtrl = new L.control({
+            position: 'topleft'
+        });
+        geolocCtrl.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'leaflet-control-zoom leaflet-control');
+            div.innerHTML = '<a class="leaflet-control-geoloc" href="#" onclick="geoLocate(); return false;" title="Mia posizione"></a>';
+            return div;
+        };
+
+        // Codice per geocodifica
+        $(function() {
+            // Zoom alla posizione
+            function geocode(query) {
+                $.ajax({
+                    url: 'http://open.mapquestapi.com/nominatim/v1/search?format=json&json_callback=callback&limit=1&q=' + query,
+                    dataType: 'jsonp',
+                    jsonpCallback: 'callback',
+                    success: function (value) {
+                        value = value[0];
+                        if (value === undefined) {
+                            alert('<p>The search you tried did not return a result.</p>');
+                        } else {
+                                var point = new L.LatLng(value.lat, value.lon);
+                                map.setView(point, 12);
+                        }
+                    }
+                });
+            }
+
+            var input = $('input.search');
+
+        console.log(input);
+
+            $('form.location').submit(function (e){
+                e.preventDefault();
+                var inputValue = input.val(),
+                encodedInput = encodeURIComponent(inputValue);
+                geocode(encodedInput);
+            });
+        });
+
+        var riosLayer = L.geoJson(riosFeature, {
+
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: riosIcon});
+  
+                    },
+            
+                    onEachFeature: onEachFeature    
+
+            });
+
+        riosMC.addLayer(riosLayer);
+        riosMC.addTo(map);
+        //riosLayer.addTo(map);
+
+        map.on('locationfound', onLocationFound);
+        //map.on('locationerror', onLocationError);
+
+        // Layer control
+        
+        if (isMobile.any() || document.body.clientWidth <= 767) {
+            var isCollapsed = true;
+        } else{
+            var isCollapsed = false;
+        };
+        
+        map.addControl(geolocCtrl);
+        
+        var scaleControl = new L.control.scale({
+            position: "bottomright"
+        });
+        map.addControl(scaleControl);
+
+    </script>
+
+    <div class="geolocation">
+        <a href="#" onclick="geoLocate(); return false;" title="Try Location"></a>
+    </div>
+    <form class='location'>
+        <input type='text' class='search' placeholder='Cerca Indirizzo'>
+    </form>
+</body>
