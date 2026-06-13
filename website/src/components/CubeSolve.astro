@@ -12,7 +12,9 @@ interface Props {
 const { sections } = Astro.props;
 
 // Resolve the texture from /public, honouring any deploy base path.
-const asset = `${import.meta.env.BASE_URL}world-bold.svg`.replace(/([^:])\/\//g, "$1/");
+// BASE_URL may or may not carry a trailing slash depending on the deploy
+// target (e.g. `/website` vs `/website/`); normalise to exactly one slash.
+const asset = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/world-bold.svg`;
 ---
 
 <div class="cube-experience">
