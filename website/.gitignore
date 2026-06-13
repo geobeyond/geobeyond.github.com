@@ -26,3 +26,5 @@ pnpm-debug.log*
 # local design-exploration scratch (renders, videos, throwaway build scripts)
 # kept out of the product repo
 design-exploration/
+screenshots-content-update/
+screenshot-all.mjs

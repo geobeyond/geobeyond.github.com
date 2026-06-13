@@ -1,11 +1,14 @@
 /* ===========================================================================
- * DRAFT CONTENT — copy, chips and ordering are placeholders to be reviewed
- * and rethought carefully. The structure (sections + cube transitions) is the
- * stable part; the words are not final.
+ * Homepage content — EN + IT.
+ *
+ * The narrative arc is the Foundation → Operate → Catalog → Federate lifecycle
+ * (the full lifecycle of standards-compliant geospatial services), distilled
+ * from real Geobeyond reference projects (Roma Capitale: MPIC/Atlante,
+ * Aerofototeca, PDND, GeoRoma TVA/Siscat, Mediageo cloud migration).
  *
  * One `.sec` per scroll step. The cube plays one solve-transition BETWEEN each
- * consecutive pair, so N sections ⇒ N-1 transitions. The cube currently has 4
- * built-in transition sequences (see cube-solve.ts), matching 5 sections.
+ * consecutive pair, so N sections ⇒ N-1 transitions. The cube has 4 built-in
+ * transition sequences (see cube-solve.ts), matching 5 sections.
  * ========================================================================= */
 
 export type Section = {
@@ -30,37 +33,37 @@ export const home: Record<Locale, { sections: Section[] }> = {
         hero: true,
         eyebrow: "Open-source geospatial engineering",
         titleHtml: 'Making<br><span class="b">Geospatial</span><br><span class="g">Happen</span>',
-        body: "The geospatial world is complex. Scroll — we solve it, one capability at a time.",
+        body: "Standards-compliant geospatial services — designed, built, operated and federated. Scroll: we walk the full lifecycle, one capability at a time.",
         hint: "↓ scroll to solve",
         badge: "complex → ordered",
       },
       {
-        num: "01 — Infrastructure",
+        num: "01 — Foundation",
         titleHtml: 'Spatial Data <span class="hl">Infrastructures</span>',
-        body: "Open-source SDIs and geoportals: GeoNode, GeoServer, PostGIS.",
-        tags: ["GeoNode", "GeoServer", "PostGIS"],
-        badge: "SDI · geoportals",
+        body: "Cloud-native SDI, capacity planning, federated identity (SPID, OpenID Connect) and architectural advisory — the bedrock under every geospatial service.",
+        tags: ["Kubernetes", "PostGIS", "IAM", "SPID"],
+        badge: "SDI · IAM · cloud",
       },
       {
-        num: "02 — Data & APIs",
+        num: "02 — Operate & Build",
         titleHtml: 'Geospatial <span class="hl">APIs</span>',
-        body: "The OGC API suite with pygeoapi and FastAPI — cloud-native and STAC-ready.",
-        tags: ["pygeoapi", "FastAPI", "STAC"],
+        body: "OGC API – Features, Tiles and Processes built on pygeoapi and FastAPI. OpenAPI-described, machine-readable, secure by design.",
+        tags: ["OGC API", "pygeoapi", "FastAPI", "OpenAPI"],
         badge: "OGC API · GeoJSON",
       },
       {
-        num: "03 — Identity",
-        titleHtml: 'Digital <span class="hl">Identity</span>',
-        body: "Single Sign-On, Identity & Access Management and policy-based authorization.",
-        tags: ["OpenID Connect", "OPA"],
-        badge: "SSO · IAM",
+        num: "03 — Catalog & Discover",
+        titleHtml: 'Cloud-native <span class="hl">catalogs</span>',
+        body: "SpatioTemporal Asset Catalogs (STAC), Cloud Optimized GeoTIFF and S3 object storage — Earth Observation and aerial imagery, ready to search across space and time.",
+        tags: ["STAC", "COG", "pgSTAC", "MinIO S3"],
+        badge: "STAC · COG · search",
       },
       {
-        num: "04 — Open Source",
-        titleHtml: 'Built in the <span class="hl">open</span>',
-        body: "fastgeoapi, geoserverx, fastflows — and core contributors to pygeoapi. The world, solved.",
-        tags: ["fastgeoapi", "geoserverx", "fastflows"],
-        badge: "solved · ordered world",
+        num: "04 — Federate",
+        titleHtml: 'Federation &amp; <span class="hl">open source</span>',
+        body: "Federated E-Services on Italy's national PDND platform, OAuth2 machine-to-machine, and the open-source stack we maintain — pygeoapi, GeoNode, fastgeoapi.",
+        tags: ["PDND", "OAuth2 M2M", "pygeoapi", "GeoNode"],
+        badge: "PDND · federated · open",
       },
     ],
   },
@@ -70,37 +73,37 @@ export const home: Record<Locale, { sections: Section[] }> = {
         hero: true,
         eyebrow: "Ingegneria geospaziale open source",
         titleHtml: 'Making<br><span class="b">Geospatial</span><br><span class="g">Happen</span>',
-        body: "Il mondo geospaziale è complesso. Scorri: lo risolviamo, una capability alla volta.",
+        body: "Servizi geospaziali conformi agli standard — progettati, costruiti, operati e federati. Scorri: percorriamo l'intero ciclo, una capability alla volta.",
         hint: "↓ scorri per risolvere",
         badge: "complex → ordered",
       },
       {
-        num: "01 — Infrastrutture",
+        num: "01 — Fondamenta",
         titleHtml: 'Spatial Data <span class="hl">Infrastructures</span>',
-        body: "SDI e geoportali open source: GeoNode, GeoServer, PostGIS.",
-        tags: ["GeoNode", "GeoServer", "PostGIS"],
-        badge: "SDI · geoportals",
+        body: "SDI cloud-native, capacity planning, identità federata (SPID, OpenID Connect) e advisory architetturale — le fondamenta sotto a ogni servizio geospaziale.",
+        tags: ["Kubernetes", "PostGIS", "IAM", "SPID"],
+        badge: "SDI · IAM · cloud",
       },
       {
-        num: "02 — Dati & API",
+        num: "02 — Operare e costruire",
         titleHtml: 'Geospatial <span class="hl">APIs</span>',
-        body: "La suite OGC API con pygeoapi e FastAPI, cloud-native e STAC.",
-        tags: ["pygeoapi", "FastAPI", "STAC"],
+        body: "OGC API – Features, Tiles e Processes su pygeoapi e FastAPI. Descritte in OpenAPI, machine-readable, sicure by design.",
+        tags: ["OGC API", "pygeoapi", "FastAPI", "OpenAPI"],
         badge: "OGC API · GeoJSON",
       },
       {
-        num: "03 — Identità",
-        titleHtml: 'Digital <span class="hl">Identity</span>',
-        body: "Single Sign-On, IAM e autorizzazione basata su policy.",
-        tags: ["OpenID Connect", "OPA"],
-        badge: "SSO · IAM",
+        num: "03 — Catalogare e scoprire",
+        titleHtml: 'Cataloghi <span class="hl">cloud-native</span>',
+        body: "SpatioTemporal Asset Catalogs (STAC), Cloud Optimized GeoTIFF e object storage S3 — Earth Observation e fotogrammi aerei, ricercabili nello spazio e nel tempo.",
+        tags: ["STAC", "COG", "pgSTAC", "MinIO S3"],
+        badge: "STAC · COG · search",
       },
       {
-        num: "04 — Open Source",
-        titleHtml: 'Built in the <span class="hl">open</span>',
-        body: "fastgeoapi, geoserverx, fastflows — e core dev di pygeoapi. Il mondo è risolto.",
-        tags: ["fastgeoapi", "geoserverx", "fastflows"],
-        badge: "solved · ordered world",
+        num: "04 — Federare",
+        titleHtml: 'Federazione e <span class="hl">open source</span>',
+        body: "E-Services federati sulla PDND nazionale, OAuth2 machine-to-machine e lo stack open source che manteniamo — pygeoapi, GeoNode, fastgeoapi.",
+        tags: ["PDND", "OAuth2 M2M", "pygeoapi", "GeoNode"],
+        badge: "PDND · federated · open",
       },
     ],
   },
