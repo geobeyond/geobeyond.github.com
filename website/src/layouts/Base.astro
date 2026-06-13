@@ -1,0 +1,125 @@
+---
+/** Base layout: html shell, fonts, header with language switch, footer. */
+import "@fontsource/urbanist/700.css";
+import "@fontsource/urbanist/800.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "../styles/global.css";
+import { ui, localePrefix, altLocale } from "../i18n/ui";
+import type { Locale } from "../i18n/home";
+
+interface Props {
+  title: string;
+  description?: string;
+  locale: Locale;
+}
+const { title, description = "", locale } = Astro.props;
+const t = ui[locale];
+const alt = altLocale(locale);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const link = (loc: Locale) => `${base}${localePrefix(loc) || "/"}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="alternate" hreflang={alt} href={link(alt)} />
+    <link rel="alternate" hreflang={locale} href={link(locale)} />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href={link(locale)}>
+        geo<span>beyond</span>
+      </a>
+      <nav class="site-nav">
+        {t.nav.map((n) => <a href={n.href}>{n.label}</a>)}
+      </nav>
+      <a class="lang-switch" href={link(alt)} aria-label={`Switch language to ${ui[alt].langName}`}>
+        {ui[alt].langName}
+      </a>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <span>© {new Date().getFullYear()} Geobeyond Srl</span>
+      <span>{t.footerNote}</span>
+    </footer>
+
+    <style>
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 18px 32px;
+        backdrop-filter: blur(6px);
+      }
+      .brand {
+        font-family: Urbanist, sans-serif;
+        font-weight: 800;
+        font-size: 20px;
+        letter-spacing: -0.02em;
+        color: #00283c;
+        text-decoration: none;
+      }
+      .brand span {
+        color: #00a0dc;
+      }
+      .site-nav {
+        display: flex;
+        gap: 18px;
+        margin-left: auto;
+      }
+      .site-nav a {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: #3c5666;
+        text-decoration: none;
+      }
+      .site-nav a:hover {
+        color: #00a0dc;
+      }
+      .lang-switch {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 500;
+        color: #00283c;
+        border: 1px solid #cfe3ee;
+        border-radius: 999px;
+        padding: 5px 10px;
+        text-decoration: none;
+      }
+      .lang-switch:hover {
+        background: #eef7fc;
+      }
+      .site-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        justify-content: space-between;
+        padding: 28px 32px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: #6a8497;
+        border-top: 1px solid #e6eef3;
+      }
+      @media (max-width: 880px) {
+        .site-nav {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,226 @@
+---
+/**
+ * CubeSolve — the brand signature hero.
+ * Renders the scrolling content column + the sticky 3D cube stage.
+ * Copy is data-driven (see src/i18n/home.ts) so this stays content-agnostic.
+ */
+import type { Section } from "../i18n/home";
+
+interface Props {
+  sections: Section[];
+}
+const { sections } = Astro.props;
+
+// Resolve the texture from /public, honouring any deploy base path.
+const asset = `${import.meta.env.BASE_URL}world-bold.svg`.replace(/([^:])\/\//g, "$1/");
+---
+
+<div class="cube-experience">
+  <div class="content">
+    {
+      sections.map((s) => (
+        <section class:list={["sec", { hero: s.hero }]} data-badge={s.badge}>
+          {s.eyebrow && <div class="eyebrow">{s.eyebrow}</div>}
+          {s.num && <div class="num">{s.num}</div>}
+          {s.hero ? (
+            <h1 set:html={s.titleHtml} />
+          ) : (
+            <h2 set:html={s.titleHtml} />
+          )}
+          <p>{s.body}</p>
+          {s.tags && (
+            <div class="tags">
+              {s.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
+          )}
+          {s.hint && <div class="hint">{s.hint}</div>}
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="sticky">
+    <div class="stagewrap">
+      <div class="view"><div class="cube" id="cube" data-asset={asset}></div></div>
+      <div class="badge" id="badge"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initCubeSolve } from "../lib/cube-solve";
+  initCubeSolve();
+</script>
+
+<!-- Global because the cube's cells/stickers are created in JS and would not
+     pick up Astro's scoped-style attribute. -->
+<style is:global>
+  .cube-experience {
+    --navy: #00283c;
+    --blue: #00a0dc;
+    --green: #78b428;
+    --green-d: #5c8c1f;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+  }
+  .cube-experience .content {
+    padding: 0 64px;
+  }
+  .cube-experience .sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    perspective: 2400px;
+    background: radial-gradient(720px 540px at 50% 44%, #eaf6fd, #fff 72%);
+  }
+  .cube-experience .stagewrap {
+    position: relative;
+    filter: drop-shadow(0 30px 34px rgba(0, 80, 120, 0.22));
+  }
+  .cube-experience .view {
+    transform-style: preserve-3d;
+    transform: rotateX(-26deg) rotateY(-20deg);
+  }
+  .cube-experience .cube {
+    position: relative;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+  }
+  .cube-experience .cubie {
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+  .cube-experience .st {
+    position: absolute;
+    box-sizing: border-box;
+    border: 5px solid #080a0b;
+    border-radius: 4px;
+    background-color: var(--blue);
+    background-origin: border-box;
+  }
+  .cube-experience .badge {
+    position: absolute;
+    left: 50%;
+    bottom: -44px;
+    transform: translateX(-50%);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    background: var(--navy);
+    color: #aadd5e;
+    padding: 8px 14px;
+    border-radius: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: 0.4s;
+  }
+  .cube-experience .badge.on {
+    opacity: 1;
+  }
+  .cube-experience .sec {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 520px;
+    opacity: 0.3;
+    transform: translateY(18px);
+    transition: 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .cube-experience .sec.active {
+    opacity: 1;
+    transform: none;
+  }
+  .cube-experience .num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--green-d);
+    letter-spacing: 0.1em;
+  }
+  .cube-experience .sec h2 {
+    font-family: Urbanist, sans-serif;
+    font-weight: 800;
+    font-size: 46px;
+    letter-spacing: -0.025em;
+    color: var(--navy);
+    margin-top: 10px;
+    line-height: 1.04;
+  }
+  .cube-experience .sec.active h2 .hl {
+    color: var(--blue);
+  }
+  .cube-experience .sec p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #3c5666;
+    margin-top: 14px;
+  }
+  .cube-experience .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .cube-experience .tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: #eef7fc;
+    border: 1px solid #cfe3ee;
+    color: #00648c;
+  }
+  .cube-experience .hero h1 {
+    font-family: Urbanist, sans-serif;
+    font-weight: 800;
+    font-size: 70px;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--navy);
+  }
+  .cube-experience .hero h1 .b {
+    color: var(--blue);
+  }
+  .cube-experience .hero h1 .g {
+    color: var(--green);
+  }
+  .cube-experience .eyebrow {
+    font-family: Urbanist, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-d);
+  }
+  .cube-experience .hint {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: #8aa;
+    margin-top: 18px;
+  }
+
+  /* Draft responsive fallback: stack on small screens. */
+  @media (max-width: 880px) {
+    .cube-experience {
+      grid-template-columns: 1fr;
+    }
+    .cube-experience .content {
+      padding: 0 28px;
+      order: 2;
+    }
+    .cube-experience .sticky {
+      order: 1;
+      height: 70vh;
+    }
+    .cube-experience .hero h1 {
+      font-size: 48px;
+    }
+    .cube-experience .sec h2 {
+      font-size: 34px;
+    }
+  }
+</style>

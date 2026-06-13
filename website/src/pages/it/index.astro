@@ -1,0 +1,15 @@
+---
+import Base from "../../layouts/Base.astro";
+import CubeSolve from "../../components/CubeSolve.astro";
+import { home } from "../../i18n/home";
+
+const locale = "it" as const;
+---
+
+<Base
+  locale={locale}
+  title="Geobeyond — Making Geospatial Happen"
+  description="Ingegneria geospaziale open source: Spatial Data Infrastructures, OGC API e identità digitale. Mettiamo ordine in un mondo complesso, una capability alla volta."
+>
+  <CubeSolve sections={home[locale].sections} />
+</Base>

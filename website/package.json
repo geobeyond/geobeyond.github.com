@@ -1,0 +1,37 @@
+{
+  "name": "website",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.2.8",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/jost": "^5.2.8",
+    "@fontsource/manrope": "^5.2.8",
+    "@fontsource/montserrat": "^5.2.8",
+    "@fontsource/outfit": "^5.2.8",
+    "@fontsource/plus-jakarta-sans": "^5.2.8",
+    "@fontsource/poppins": "^5.2.7",
+    "@fontsource/quicksand": "^5.2.10",
+    "@fontsource/space-grotesk": "^5.2.10",
+    "@fontsource/urbanist": "^5.2.7",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.4.6",
+    "gifenc": "^1.0.3",
+    "imagetracerjs": "^1.2.6",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

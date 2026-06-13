@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   Geobeyond design tokens
+   "Enabling geography as business-key"
+   Palette evokes the geospatial domain: deep teal (cartographic water),
+   bright spring-green accent (data / signal), warm neutrals (land).
+---------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Brand — deep teal scale */
+  --color-brand-50: #eafaf7;
+  --color-brand-100: #c8f1e9;
+  --color-brand-200: #97e3d6;
+  --color-brand-300: #5ecdbd;
+  --color-brand-400: #2fb0a0;
+  --color-brand-500: #169284;
+  --color-brand-600: #0f7569;
+  --color-brand-700: #105d55;
+  --color-brand-800: #114a45;
+  --color-brand-900: #0c302d;
+  --color-brand-950: #061b1a;
+
+  /* Accent — signal green */
+  --color-accent-300: #9af6b8;
+  --color-accent-400: #54e88a;
+  --color-accent-500: #21d167;
+  --color-accent-600: #12ad51;
+
+  --color-ink: #061b1a;
+}
+
+html {
+  /* No smooth-scroll: the cube signature is scroll-scrubbed and needs the
+     exact scrollY each frame; smooth-scroll desyncs the turns from sections. */
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-white text-brand-950 font-sans antialiased;
+}
+
+::selection {
+  background-color: var(--color-accent-400);
+  color: var(--color-brand-950);
+}
+
+/* Reusable horizontal container */
+@utility container-x {
+  @apply mx-auto w-full max-w-6xl px-6 lg:px-8;
+}
+
+/* Entrance animation */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
