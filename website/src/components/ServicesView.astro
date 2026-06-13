@@ -1,0 +1,35 @@
+---
+import InnerPage from "../layouts/InnerPage.astro";
+import { pages } from "../i18n/pages";
+import type { Locale } from "../i18n/home";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = pages[locale].services;
+---
+
+<InnerPage
+  locale={locale}
+  title={`${c.heading} — Geobeyond`}
+  eyebrow={c.eyebrow}
+  heading={c.heading}
+  lead={c.lead}
+>
+  <div class="cards">
+    {
+      c.items.map((item) => (
+        <section class="card">
+          <h2>{item.title}</h2>
+          <p>{item.summary}</p>
+          <ul class="points">
+            {item.points.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</InnerPage>

@@ -14,28 +14,30 @@ export function altLocale(locale: Locale): Locale {
   return locale === "en" ? "it" : "en";
 }
 
+// `path` is the route WITHOUT the locale prefix; Base.astro prepends the base
+// and locale prefix. Slugs are shared across locales for now (draft).
 export const ui: Record<Locale, {
   langName: string;
-  nav: { label: string; href: string }[];
+  nav: { label: string; path: string }[];
   footerNote: string;
 }> = {
   en: {
     langName: "EN",
     nav: [
-      { label: "Services", href: "#services" },
-      { label: "Open Source", href: "#open-source" },
-      { label: "About", href: "#about" },
-      { label: "Contact", href: "#contact" },
+      { label: "Services", path: "/services" },
+      { label: "Open Source", path: "/open-source" },
+      { label: "About", path: "/about" },
+      { label: "Contact", path: "/contact" },
     ],
     footerNote: "Open-source geospatial engineering since 2011 · Vacone (RI), Italy",
   },
   it: {
     langName: "IT",
     nav: [
-      { label: "Servizi", href: "#services" },
-      { label: "Open Source", href: "#open-source" },
-      { label: "Chi siamo", href: "#about" },
-      { label: "Contatti", href: "#contact" },
+      { label: "Servizi", path: "/services" },
+      { label: "Open Source", path: "/open-source" },
+      { label: "Chi siamo", path: "/about" },
+      { label: "Contatti", path: "/contact" },
     ],
     footerNote: "Ingegneria geospaziale open source dal 2011 · Vacone (RI), Italia",
   },

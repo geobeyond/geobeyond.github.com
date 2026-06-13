@@ -1,0 +1,71 @@
+---
+/** Inner-page wrapper: standard page header + slotted content, on Base. */
+import Base from "./Base.astro";
+import type { Locale } from "../i18n/home";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  eyebrow?: string;
+  heading: string;
+  lead?: string;
+}
+const { locale, title, description, eyebrow, heading, lead } = Astro.props;
+---
+
+<Base locale={locale} title={title} description={description}>
+  <article class="page">
+    <header class="page-head">
+      {eyebrow && <p class="page-eyebrow">{eyebrow}</p>}
+      <h1>{heading}</h1>
+      {lead && <p class="page-lead">{lead}</p>}
+    </header>
+    <slot />
+  </article>
+</Base>
+
+<style>
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 120px 32px 80px;
+  }
+  .page-head {
+    border-bottom: 1px solid #e6eef3;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .page-eyebrow {
+    font-family: Urbanist, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #5c8c1f;
+  }
+  .page-head h1 {
+    font-family: Urbanist, sans-serif;
+    font-weight: 800;
+    font-size: 54px;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    color: #00283c;
+    margin-top: 8px;
+  }
+  .page-lead {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #3c5666;
+    margin-top: 16px;
+    max-width: 60ch;
+  }
+  @media (max-width: 880px) {
+    .page {
+      padding: 100px 24px 64px;
+    }
+    .page-head h1 {
+      font-size: 40px;
+    }
+  }
+</style>

@@ -64,3 +64,184 @@ body {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ---------------------------------------------------------------------------
+   Inner-page content blocks (Services / Open Source / About / Contact).
+   Plain CSS (not @apply) so it stays legible alongside the signature styles.
+--------------------------------------------------------------------------- */
+.cards {
+  display: grid;
+  gap: 18px;
+}
+.card {
+  border: 1px solid #e6eef3;
+  border-radius: 16px;
+  padding: 26px 28px;
+  background: #fbfdfe;
+}
+.card h2 {
+  font-family: Urbanist, sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: #00283c;
+}
+.card > p {
+  margin-top: 8px;
+  color: #3c5666;
+  line-height: 1.6;
+}
+.points {
+  margin-top: 14px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.points li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 15px;
+  color: #2c4456;
+}
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #78b428;
+}
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.product {
+  display: block;
+  border: 1px solid #e6eef3;
+  border-radius: 14px;
+  padding: 20px 22px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.product:hover {
+  border-color: #00a0dc;
+  transform: translateY(-2px);
+}
+.product-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.product-name {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 17px;
+  color: #00648c;
+}
+.product-lang {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: #8aa;
+}
+.product p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #3c5666;
+}
+.sub {
+  font-family: Urbanist, sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #00283c;
+  margin: 40px 0 14px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #eef7fc;
+  border: 1px solid #cfe3ee;
+  color: #00648c;
+}
+.prose p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #2c4456;
+  margin-bottom: 16px;
+  max-width: 68ch;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+.stat {
+  border: 1px solid #e6eef3;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-v {
+  display: block;
+  font-family: Urbanist, sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  color: #00a0dc;
+}
+.stat-l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: #6a8497;
+}
+.contact-email {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+.contact-email span {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: #6a8497;
+  margin-right: 10px;
+}
+.contact-email a {
+  font-family: Urbanist, sans-serif;
+  font-weight: 700;
+  color: #00283c;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.links a {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  text-decoration: none;
+  color: #00648c;
+  border: 1px solid #cfe3ee;
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+.links a:hover {
+  background: #eef7fc;
+}
+@media (max-width: 720px) {
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

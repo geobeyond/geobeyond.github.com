@@ -1,0 +1,27 @@
+---
+import InnerPage from "../layouts/InnerPage.astro";
+import { pages } from "../i18n/pages";
+import type { Locale } from "../i18n/home";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = pages[locale].contact;
+---
+
+<InnerPage
+  locale={locale}
+  title={`${c.heading} — Geobeyond`}
+  eyebrow={c.eyebrow}
+  heading={c.heading}
+  lead={c.lead}
+>
+  <p class="contact-email">
+    <span>{c.emailLabel}</span>
+    <a href={`mailto:${c.email}`}>{c.email}</a>
+  </p>
+  <div class="links">
+    {c.social.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+  </div>
+</InnerPage>

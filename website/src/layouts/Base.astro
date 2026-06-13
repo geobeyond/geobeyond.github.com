@@ -19,6 +19,7 @@ const alt = altLocale(locale);
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const link = (loc: Locale) => `${base}${localePrefix(loc) || "/"}`;
+const navHref = (path: string) => `${base}${localePrefix(locale)}${path}`;
 ---
 
 <!doctype html>
@@ -39,7 +40,7 @@ const link = (loc: Locale) => `${base}${localePrefix(loc) || "/"}`;
         geo<span>beyond</span>
       </a>
       <nav class="site-nav">
-        {t.nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        {t.nav.map((n) => <a href={navHref(n.path)}>{n.label}</a>)}
       </nav>
       <a class="lang-switch" href={link(alt)} aria-label={`Switch language to ${ui[alt].langName}`}>
         {ui[alt].langName}
